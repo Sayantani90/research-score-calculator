@@ -2,119 +2,525 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Research Publication Score Calculator</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Animated background particles */
+    body::before {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(120, 200, 255, 0.3) 0%, transparent 50%);
+      animation: floatingBg 20s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    @keyframes floatingBg {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-20px) rotate(180deg); }
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .calculator-card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      border-radius: 24px;
+      padding: 40px;
+      box-shadow: 
+        0 20px 40px rgba(0, 0, 0, 0.1),
+        0 0 0 1px rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      animation: slideInUp 0.8s ease-out;
+    }
+
+    @keyframes slideInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .header h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #2d3748;
+      margin-bottom: 10px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .header .subtitle {
+      color: #718096;
+      font-size: 1.1rem;
+      font-weight: 500;
+    }
+
+    .icon-title {
+      display: inline-flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .icon-title i {
+      font-size: 2.2rem;
+      color: #667eea;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 25px;
+      margin-bottom: 30px;
+    }
+
+    .form-group {
+      position: relative;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      color: #4a5568;
+      margin-bottom: 8px;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .form-group label i {
+      color: #667eea;
+      font-size: 1rem;
+    }
+
+    .form-control, .form-select {
+      width: 100%;
+      padding: 15px 20px;
+      border: 2px solid #e2e8f0;
+      border-radius: 12px;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      background: #fff;
+      outline: none;
+    }
+
+    .form-control:focus, .form-select:focus {
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .form-control:hover, .form-select:hover {
+      border-color: #cbd5e0;
+      transform: translateY(-1px);
+    }
+
+    .form-control.readonly {
+      background: #f7fafc;
+      color: #a0aec0;
+    }
+
+    .form-text {
+      font-size: 0.85rem;
+      color: #718096;
+      margin-top: 5px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .form-text i {
+      color: #fbb748;
+    }
+
+    .submit-btn {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 18px 40px;
+      border-radius: 50px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: block;
+      margin: 0 auto;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+    }
+
+    .submit-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    .submit-btn:hover::before {
+      left: 100%;
+    }
+
+    .submit-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
+    }
+
+    .submit-btn:active {
+      transform: translateY(-1px);
+    }
+
+    .result-card {
+      background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+      color: white;
+      padding: 25px;
+      border-radius: 16px;
+      text-align: center;
+      margin-top: 30px;
+      box-shadow: 0 10px 30px rgba(72, 187, 120, 0.3);
+      animation: resultAppear 0.5s ease-out;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .result-card::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: linear-gradient(45deg, #48bb78, #38a169, #48bb78);
+      border-radius: 18px;
+      z-index: -1;
+      animation: borderGlow 2s linear infinite;
+    }
+
+    @keyframes borderGlow {
+      0% { filter: hue-rotate(0deg); }
+      100% { filter: hue-rotate(360deg); }
+    }
+
+    @keyframes resultAppear {
+      from {
+        opacity: 0;
+        transform: scale(0.8);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .result-card .score {
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin-bottom: 10px;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .result-card .score-label {
+      font-size: 1.2rem;
+      opacity: 0.9;
+      font-weight: 500;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* Loading animation */
+    .loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 1s ease-in-out infinite;
+      margin-right: 10px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+      .calculator-card {
+        padding: 25px;
+        margin: 10px;
+      }
+
+      .header h1 {
+        font-size: 2rem;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+
+      .submit-btn {
+        padding: 15px 35px;
+        font-size: 1rem;
+      }
+    }
+
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: rgba(102, 126, 234, 0.5);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(102, 126, 234, 0.7);
+    }
+  </style>
 </head>
-<body class="bg-light">
-<div class="container py-5">
-  <div class="card shadow-lg p-4 rounded-4">
-    <h2 class="mb-4 text-center">📊 Research Publication Score Calculator</h2>
-
-    <form id="scoreForm" class="row g-3">
-      <div class="col-md-6">
-        <label class="form-label">Total Authors</label>
-        <input type="number" class="form-control" id="totalAuthors" min="1" required />
-      </div>
-	  
-	  <div class="col-md-6">
-        <label class="form-label">Role</label>
-        <select class="form-select" id="role" required>
-          <option value="" selected disabled>-- Select Role --</option>
-          <option value="First">First Author</option>
-          <option value="Corresponding">Corresponding / Supervisor / Mentor</option>
-          <option value="FirstCorresponding">First & Corresponding</option>
-          <option value="Other">Other Co-author</option>
-        </select>
-      </div>
-      
-	  <div class="col-md-6" id="coAuthorsDiv">
-        <label class="form-label">Total Co-authors</label>
-        <input type="number" class="form-control" id="totalCoAuthors" min="0" />
-        <div class="form-text">Editable only if role is “Other Co-author”.</div>
-      </div>
-	  
-	  <div class="col-md-6">
-        <label class="form-label">Impact Factor</label>
-        <input type="number" class="form-control" id="impactFactor" step="0.01" min="0" required />
-      </div>
- 
-
-      <div class="col-md-6">
-        <label class="form-label">Type</label>
-        <select class="form-select" id="type" required>
-          <option value="UGC">UGC</option>
-          <option value="Other">Other</option>
-        </select>
+<body>
+  <div class="container">
+    <div class="calculator-card">
+      <div class="header">
+        <h1 class="icon-title">
+          <i class="fas fa-chart-line"></i>
+          Research Publication Score Calculator
+        </h1>
+        <p class="subtitle">Calculate your research publication impact score with precision</p>
       </div>
 
-      <div class="col-12 text-center">
-        <button type="submit" class="btn btn-primary px-4 mt-3">Calculate Score</button>
-      </div>
-    </form>
+      <form id="scoreForm">
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="totalAuthors">
+              <i class="fas fa-users"></i>
+              Total Authors
+            </label>
+            <input type="number" class="form-control" id="totalAuthors" min="1" required placeholder="Enter number of authors" />
+          </div>
+          
+          <div class="form-group">
+            <label for="role">
+              <i class="fas fa-user-tag"></i>
+              Your Role
+            </label>
+            <select class="form-select" id="role" required>
+              <option value="" selected disabled>-- Select Your Role --</option>
+              <option value="First">First Author</option>
+              <option value="Corresponding">Corresponding / Supervisor / Mentor</option>
+              <option value="FirstCorresponding">First & Corresponding</option>
+              <option value="Other">Other Co-author</option>
+            </select>
+          </div>
+          
+          <div class="form-group" id="coAuthorsDiv">
+            <label for="totalCoAuthors">
+              <i class="fas fa-user-friends"></i>
+              Total Co-authors
+            </label>
+            <input type="number" class="form-control" id="totalCoAuthors" min="0" placeholder="Number of co-authors" />
+            <div class="form-text">
+              <i class="fas fa-info-circle"></i>
+              Editable only if role is "Other Co-author"
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="impactFactor">
+              <i class="fas fa-star"></i>
+              Impact Factor
+            </label>
+            <input type="number" class="form-control" id="impactFactor" step="0.01" min="0" required placeholder="0.00" />
+          </div>
 
-    <div id="result" class="alert alert-success text-center fw-bold mt-4 d-none"></div>
+          <div class="form-group">
+            <label for="type">
+              <i class="fas fa-certificate"></i>
+              Publication Type
+            </label>
+            <select class="form-select" id="type" required>
+              <option value="UGC">UGC Listed</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+        </div>
+
+        <button type="submit" class="submit-btn">
+          <i class="fas fa-calculator"></i>
+          Calculate Score
+        </button>
+      </form>
+
+      <div id="result" class="result-card hidden">
+        <div class="score" id="scoreValue">0.00</div>
+        <div class="score-label">
+          <i class="fas fa-trophy"></i>
+          Final Publication Score
+        </div>
+      </div>
+    </div>
   </div>
-</div>
 
-<script>
-  const roleSelect = document.getElementById("role");
-  const totalCoAuthorsInput = document.getElementById("totalCoAuthors");
-
-  function syncCoAuthorsWithRole() {
-    if (roleSelect.value === "Other") {
-      // Editable
-      totalCoAuthorsInput.readOnly = false;
-      totalCoAuthorsInput.value = "";
-      totalCoAuthorsInput.classList.remove("bg-light");
-    } else {
-      // Auto-set to 0 and lock
-      totalCoAuthorsInput.value = "0";
-      totalCoAuthorsInput.readOnly = true;
-      totalCoAuthorsInput.classList.add("bg-light");
-    }
-  }
-
-  document.addEventListener("DOMContentLoaded", syncCoAuthorsWithRole);
-  roleSelect.addEventListener("change", syncCoAuthorsWithRole);
-
-  document.getElementById("scoreForm").addEventListener("submit", function (e) {
-    e.preventDefault();
-
-    const totalAuthors = parseInt(document.getElementById("totalAuthors").value, 10) || 0;
-    const impactFactor = parseFloat(document.getElementById("impactFactor").value) || 0;
-    const totalCoAuthors = parseInt(totalCoAuthorsInput.value, 10) || 0;
-    const role = roleSelect.value;
-    const type = document.getElementById("type").value;
-
-    // Impact Factor Score
-    let impactScore = 0;
-    if (impactFactor === 0) impactScore = 0;
-    else if (impactFactor <= 1) impactScore = 5;
-    else if (impactFactor <= 2) impactScore = 10;
-    else if (impactFactor <= 5) impactScore = 15;
-    else if (impactFactor <= 10) impactScore = 20;
-    else impactScore = 25;
-
-    // Role Weight (Excel logic)
-    let roleWeight = 0;
-    if (role === "First" || role === "Corresponding") {
-      roleWeight = (totalAuthors === 2) ? 0.5 : 0.35;
-    } else if (role === "FirstCorresponding") {
-      roleWeight = 1;
-    } else if (role === "Other") {
-      roleWeight = (totalAuthors === 2) ? 0.3 : .3/totalCoAuthors;
-    }
-
-    // Type Score
-    const typeScore = (type === "UGC") ? 25 : 10;
-
-    // Final Score
-    const finalScore = typeScore + (impactScore * roleWeight);
-
+  <script>
+    const roleSelect = document.getElementById("role");
+    const totalCoAuthorsInput = document.getElementById("totalCoAuthors");
+    const submitBtn = document.querySelector('.submit-btn');
     const resultDiv = document.getElementById("result");
-    resultDiv.textContent = "✅ Final Score: " + finalScore.toFixed(2);
-    resultDiv.classList.remove("d-none");
-  });
-</script>
+    const scoreValue = document.getElementById("scoreValue");
+
+    function syncCoAuthorsWithRole() {
+      if (roleSelect.value === "Other") {
+        totalCoAuthorsInput.readOnly = false;
+        totalCoAuthorsInput.value = "";
+        totalCoAuthorsInput.classList.remove("readonly");
+        totalCoAuthorsInput.focus();
+      } else {
+        totalCoAuthorsInput.value = "0";
+        totalCoAuthorsInput.readOnly = true;
+        totalCoAuthorsInput.classList.add("readonly");
+      }
+    }
+
+    function showLoading() {
+      submitBtn.innerHTML = '<div class="loading"></div>Calculating...';
+      submitBtn.disabled = true;
+    }
+
+    function hideLoading() {
+      submitBtn.innerHTML = '<i class="fas fa-calculator"></i> Calculate Score';
+      submitBtn.disabled = false;
+    }
+
+    document.addEventListener("DOMContentLoaded", syncCoAuthorsWithRole);
+    roleSelect.addEventListener("change", syncCoAuthorsWithRole);
+
+    document.getElementById("scoreForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      
+      showLoading();
+
+      // Simulate calculation delay for better UX
+      setTimeout(() => {
+        const totalAuthors = parseInt(document.getElementById("totalAuthors").value, 10) || 0;
+        const impactFactor = parseFloat(document.getElementById("impactFactor").value) || 0;
+        const totalCoAuthors = parseInt(totalCoAuthorsInput.value, 10) || 0;
+        const role = roleSelect.value;
+        const type = document.getElementById("type").value;
+
+        // Impact Factor Score
+        let impactScore = 0;
+        if (impactFactor === 0) impactScore = 0;
+        else if (impactFactor <= 1) impactScore = 5;
+        else if (impactFactor <= 2) impactScore = 10;
+        else if (impactFactor <= 5) impactScore = 15;
+        else if (impactFactor <= 10) impactScore = 20;
+        else impactScore = 25;
+
+        // Role Weight
+        let roleWeight = 0;
+        if (role === "First" || role === "Corresponding") {
+          roleWeight = (totalAuthors === 2) ? 0.5 : 0.35;
+        } else if (role === "FirstCorresponding") {
+          roleWeight = 1;
+        } else if (role === "Other") {
+          roleWeight = (totalAuthors === 2) ? 0.3 : 0.3 / totalCoAuthors;
+        }
+
+        // Type Score
+        const typeScore = (type === "UGC") ? 25 : 10;
+
+        // Final Score
+        const finalScore = typeScore + (impactScore * roleWeight);
+
+        // Animate score counting
+        let currentScore = 0;
+        const increment = finalScore / 20;
+        const timer = setInterval(() => {
+          currentScore += increment;
+          if (currentScore >= finalScore) {
+            currentScore = finalScore;
+            clearInterval(timer);
+          }
+          scoreValue.textContent = currentScore.toFixed(2);
+        }, 50);
+
+        resultDiv.classList.remove("hidden");
+        resultDiv.scrollIntoView({ behavior: 'smooth' });
+        hideLoading();
+      }, 800);
+    });
+
+    // Add input validation feedback
+    document.querySelectorAll('.form-control, .form-select').forEach(input => {
+      input.addEventListener('invalid', function() {
+        this.style.borderColor = '#e53e3e';
+        this.style.boxShadow = '0 0 0 3px rgba(229, 62, 62, 0.1)';
+      });
+
+      input.addEventListener('input', function() {
+        if (this.checkValidity()) {
+          this.style.borderColor = '#48bb78';
+          this.style.boxShadow = '0 0 0 3px rgba(72, 187, 120, 0.1)';
+        }
+      });
+    });
+  </script>
 </body>
 </html>
