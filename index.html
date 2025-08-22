@@ -333,6 +333,33 @@
     ::-webkit-scrollbar-thumb:hover {
       background: rgba(102, 126, 234, 0.7);
     }
+
+    /* Copyright styling */
+    .copyright {
+      text-align: center;
+      margin-top: 30px;
+      padding: 20px;
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 0.9rem;
+      font-weight: 500;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      animation: fadeInUp 1s ease-out 0.3s both;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
   </style>
 </head>
 <body>
@@ -343,7 +370,7 @@
           <i class="fas fa-chart-line"></i>
           Research Publication Score Calculator
         </h1>
-        <p class="subtitle">Calculate your research publication impact score with precision</p>
+        <p class="subtitle">CAS, JU</p>
       </div>
 
       <form id="scoreForm">
@@ -411,10 +438,14 @@
       <div id="result" class="result-card hidden">
         <div class="score" id="scoreValue">0.00</div>
         <div class="score-label">
-          <i class="fas fa-trophy"></i>
+          
           Final Publication Score
         </div>
       </div>
+    </div>
+    
+    <div class="copyright">
+      © Sayantani Chakraborty | 2025
     </div>
   </div>
 
