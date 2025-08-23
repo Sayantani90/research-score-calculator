@@ -159,9 +159,10 @@
       transform: translateY(-1px);
     }
 
-    .form-control.readonly {
+    .form-control.disabled {
       background: #f7fafc;
       color: #a0aec0;
+      cursor: not-allowed;
     }
 
     .form-text {
@@ -458,13 +459,13 @@
 
     function syncCoAuthorsWithRole() {
       if (roleSelect.value === "Other") {
-        totalCoAuthorsInput.readOnly = false;
+        totalCoAuthorsInput.disabled = false;
         totalCoAuthorsInput.value = "";
         totalCoAuthorsInput.classList.remove("readonly");
         totalCoAuthorsInput.focus();
       } else {
         totalCoAuthorsInput.value = "0";
-        totalCoAuthorsInput.readOnly = true;
+        totalCoAuthorsInput.disabled = true;
         totalCoAuthorsInput.classList.add("readonly");
       }
     }
@@ -570,6 +571,7 @@
   </script>
 </body>
 </html>
+
 
 
 
