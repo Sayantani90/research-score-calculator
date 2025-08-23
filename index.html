@@ -515,12 +515,14 @@
         }
 
         // Type Score
+        
         const typeScore = (type === "UGC") ? 25 : 10;
 
         // Final Score
-        if (type === "Other") const finalScore = typeScore;
-        else
-        const finalScore = typeScore + (impactScore * roleWeight);
+        let finalScore = 0;
+        if (type === "Other") {finalScore = typeScore;}
+        else {
+        finalScore = typeScore + (impactScore * roleWeight);}
         
         // Animate score counting
         let currentScore = 0;
@@ -557,5 +559,6 @@
   </script>
 </body>
 </html>
+
 
 
