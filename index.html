@@ -373,7 +373,7 @@
         <p class="subtitle">CAS, JU</p>
       </div>
 
-      <form id="scoreForm">
+      <form id="scoreForm" nonvalidate>
         <div class="form-grid">
           <div class="form-group">
             <label for="totalAuthors">
@@ -483,9 +483,20 @@
     roleSelect.addEventListener("change", syncCoAuthorsWithRole);
 
     document.getElementById("scoreForm").addEventListener("submit", function (e) {
-      e.preventDefault();
+  e.preventDefault();
+
+  if (!this.checkValidity()) {
+    this.reportValidity();
+    return;
+  }
+
+  showLoading();
+  
+});
+    // document.getElementById("scoreForm").addEventListener("submit", function (e) {
+     // e.preventDefault();
       
-      showLoading();
+     // showLoading();
 
       // Simulate calculation delay for better UX
       setTimeout(() => {
@@ -559,6 +570,7 @@
   </script>
 </body>
 </html>
+
 
 
 
