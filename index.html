@@ -373,7 +373,7 @@ body {
         if (role === "First" || role === "Corresponding") {
           roleWeight = (totalAuthors === 2) ? 0.5 : 0.35;
         } else if (role === "FirstCorresponding") {
-          roleWeight = (totalAuthors <= 2) ? 1 : 0.70;
+          roleWeight = (totalAuthors < 2) ? 1 : 0.70;
         } else if (role === "Other") {
           roleWeight = (totalAuthors === 2) ? 0.3 : 0.3 / totalCoAuthors;
         }
@@ -423,6 +423,7 @@ body {
   </script>
 </body>
 </html>
+
 
 
 
