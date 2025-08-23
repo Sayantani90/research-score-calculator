@@ -519,7 +519,7 @@
 
         // Final Score
         const finalScore = typeScore + (impactScore * roleWeight);
-
+        if (type === "Other") { finalScore = typeScore;}
         // Animate score counting
         let currentScore = 0;
         const increment = finalScore / 20;
@@ -555,3 +555,4 @@
   </script>
 </body>
 </html>
+
